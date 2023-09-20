@@ -21,6 +21,14 @@
     "url": "https://beeno-tung.surge.sh"
   },
   "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beenotung/net-textarea.git"
+  },
+  "homepage": "https://github.com/beenotung/net-textarea#readme",
+  "bugs": {
+    "url": "https://github.com/beenotung/net-textarea/issues"
+  },
   "main": "server.js",
   "bin": {
     "net-textarea": "server.js"
