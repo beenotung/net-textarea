@@ -29,9 +29,8 @@
   "bugs": {
     "url": "https://github.com/beenotung/net-textarea/issues"
   },
-  "main": "server.js",
   "bin": {
-    "net-textarea": "server.js"
+    "net-textarea": "cli.js"
   },
   "files": [
     "server.js"
