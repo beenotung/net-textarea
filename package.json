@@ -1,6 +1,6 @@
 {
   "name": "net-textarea",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Node.js CLI tool designed for easy text editing over the network. Runs directly with npx, no installation required.",
   "keywords": [
     "cli",
