@@ -3,9 +3,6 @@
 A Node.js CLI tool designed for easy text editing over the network. Runs directly with npx, no installation required.
 
 [![npm Package Version](https://img.shields.io/npm/v/net-textarea)](https://www.npmjs.com/package/net-textarea)
-[![Minified Package Size](https://img.shields.io/bundlephobia/min/net-textarea)](https://bundlephobia.com/package/net-textarea)
-[![Minified and Gzipped Package Size](https://img.shields.io/bundlephobia/minzip/net-textarea)](https://bundlephobia.com/package/net-textarea)
-[![npm Package Downloads](https://img.shields.io/npm/dm/net-textarea)](https://www.npmtrends.com/net-textarea)
 
 ## Features
 
