@@ -46,7 +46,10 @@ app.get('/', (req, res) => {
         <textarea id="text" name="text"></textarea>
       </div>
       <div style="display: flex">
-        <input type="submit" value="Update" style="margin: auto" />
+        <div style="margin: auto">
+          <input type="button" value="Refresh" onclick="location.reload()">
+          <input type="submit" value="Save" />
+        </div>
       </div>
     </form>
     <script>
