@@ -1,5 +1,6 @@
 import express from 'express'
 import { print } from 'listening-on'
+import { env } from './env'
 
 let app = express()
 
@@ -60,7 +61,6 @@ app.get('/', (req, res) => {
   res.end()
 })
 
-let port = +process.argv[2] || 8123
-app.listen(port, () => {
-  print(port)
+app.listen(env.PORT, () => {
+  print(env.PORT)
 })
