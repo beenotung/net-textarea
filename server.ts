@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
       }
       #main {
         display: flex;
-        height: calc(100vh - 2rem);
+        height: calc(100dvh - 2rem);
       }
       textarea {
         margin: auto;
