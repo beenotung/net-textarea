@@ -4,20 +4,26 @@ import { env } from './env'
 
 let app = express()
 
-app.use(express.urlencoded({ extended: false }))
+app.use(express.text())
 
-let text = ''
+let rooms = new Map<string, string>()
 
-app.post('/', (req, res) => {
-  text = req.body.text || ''
-  res.redirect('/')
+app.post('/text', async (req, res) => {
+  let room = req.query.room as string
+  let text = req.body
+  rooms.set(room, text)
+  res.end()
 })
 
 app.get('/text', (req, res) => {
+  let room = req.query.room as string
+  let text = rooms.get(room) || ''
   res.end(text)
 })
 
 app.get('/', (req, res) => {
+  let room = req.query.room as string || ''
+  let text = rooms.get(room) || ''
   res.header('Content-Type', 'text/html')
   res.write(/* html */ `<!DOCTYPE html>
 <html lang="en">
@@ -29,32 +35,111 @@ app.get('/', (req, res) => {
     <style>
       body {
         margin: 0;
+        overflow: hidden;
       }
-      #main {
+      #app {
+        height: calc(100dvh - 0.5rem);
         display: flex;
-        height: calc(100dvh - 2rem);
+        flex-direction: column;
+        padding: 0.25rem;
+        gap: 0.25rem;
       }
-      textarea {
-        margin: auto;
-        width: calc(100% - 2rem);
-        height: calc(100% - 2rem);
+      .menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      #textInput {
+        flex: 1;
+      }
+      #refreshButton {
+        color: black;
+      }
+      #saveButton {
+        margin-right: 1rem;
+        color: red;
       }
     </style>
   </head>
   <body>
-    <form method="post" action="/">
-      <div id="main">
-        <textarea id="text" name="text"></textarea>
+    <div id="app">
+      <div class="menu">
+        <label>Slug: <input type="text" id="roomInput" placeholder="Room"></label>
+        <button id="refreshButton">Refresh</button>
       </div>
-      <div style="display: flex">
-        <div style="margin: auto">
-          <input type="button" value="Refresh" onclick="location.reload()">
-          <input type="submit" value="Save" />
-        </div>
+      <textarea id="textInput"></textarea>
+      <div class="menu">
+        <button id="saveButton">Save</button>
       </div>
-    </form>
+    </div>
     <script>
-			text.value = ${JSON.stringify(text)}
+      let room = ${JSON.stringify(room)}
+      roomInput.value = room
+
+      let text = ${JSON.stringify(text)}
+      textInput.value = text
+
+      if (room === '') {
+        roomInput.focus()
+      } else {
+        textInput.focus()
+      }
+
+      textInput.oninput = resetSaveButton
+      function resetSaveButton() {
+        saveButton.textContent = 'Save'
+      }
+
+      // save by Ctrl + Enter
+      textInput.onkeydown = checkSaveKey
+      function checkSaveKey(event) {
+        if (event.ctrlKey && event.key === 'Enter') {
+          saveText()
+        }
+      }
+
+      roomInput.onchange = switchRoom
+      function switchRoom() {
+        console.log('switchRoom')
+        let params = new URLSearchParams()
+        params.set('room', roomInput.value)
+        let url = '/?' + params
+        history.pushState({}, '', url)
+        loadText()
+      }
+
+      refreshButton.onclick = loadText
+      window.onpopstate = loadText
+      async function loadText() {
+        console.log('loadText')
+        let url = '/text' + location.search
+        let res = await fetch(url)
+        let text = await res.text()
+        textInput.value = text
+        textInput.focus()
+      }
+
+      saveButton.onclick = saveText
+      async function saveText() {
+        console.log('saveText')
+        let url = '/text' + location.search
+        let text = textInput.value
+        let res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: text,
+        })
+        if (!res.ok) {
+          saveButton.textContent = 'Save Failed'
+          let result = res.statusText || ('status: ' + res.status)
+          alert(result)
+          return
+        }
+        saveButton.textContent = 'Saved'
+      }
     </script>
   </body>
 </html>`)
