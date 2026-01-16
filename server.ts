@@ -9,14 +9,14 @@ app.use(express.text())
 let rooms = new Map<string, string>()
 
 app.post('/text', async (req, res) => {
-  let room = req.query.room as string
+  let room = req.query.room as string || ''
   let text = req.body
   rooms.set(room, text)
   res.end()
 })
 
 app.get('/text', (req, res) => {
-  let room = req.query.room as string
+  let room = req.query.room as string || ''
   let text = rooms.get(room) || ''
   res.end(text)
 })
